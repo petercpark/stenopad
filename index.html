@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stenopad</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="header">
+        <div class="logo-container header-item">
+          <button class="logo-button button hover-button">
+            <img
+              src="./assets/stenopad_logo.svg"
+              class="s_icon"
+              id="logo"
+              alt=""
+            />
+          </button>
+          <div class="logo-menu menu urbanist-font relative hidden">
+            <p class="menu-item menu-title">HEL/HROE</p>
+            <p class="menu-item menu-text bottom-border">
+              Stenopad is a simple writing app featuring stenography. It's
+              always accessible in your browser.
+              <br />
+              <br />
+              Your writing and dictionaries remains private and is stored only
+              on your local device. Remember to save it elsewhere once you're
+              finished.
+            </p>
+            <button
+              class="menu-item menu-button button hover-button buy-stenokeyboard flex"
+            >
+              <span>
+                <a href="https://www.stenokeyboards.com/" target="_blank"
+                  >Buy a steno keyboard</a
+                >
+              </span>
+              <span class="ml-auto"
+                ><img
+                  class="s_icon"
+                  src="./assets/sk_logo.svg"
+                  alt="StenoKeyboards"
+              /></span>
+            </button>
+          </div>
+        </div>
+        <button
+          id="connect-button"
+          class="button hover-button header-item ml-auto gray"
+        >
+          Connect
+        </button>
+        <div class="three-dots-container header-item urbanist-font relative">
+          <button class="three-dots-button button hover-button">
+            <img
+              src="./assets/three_dots.svg"
+              class="s_icon"
+              id="three-dots"
+              alt=""
+            />
+          </button>
+          <div class="menu three-dots-menu hidden">
+            <p class="menu-item menu-title">Settings</p>
+            <button
+              id="toggle-dark-mode"
+              class="button hover-button menu-button"
+            >
+              Toggle Dark Mode
+            </button>
+            <div class="select-dictionary-container none">
+              <input
+                type="file"
+                id="dictionary-input"
+                multiple
+                accept=".json"
+                style="display: none"
+              />
+              <button
+                id="select-dictionaries-button"
+                class="button hover-button menu-button"
+              >
+                Select Dictionaries
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="content">
+        <textarea id="main-textarea" placeholder="Start writing..."></textarea>
+      </div>
+    </div>
+    <script src="scripts/page/script.js"></script>
+    <script type="module" src="scripts/steno/stenopad.js"></script>
+  </body>
+</html>
