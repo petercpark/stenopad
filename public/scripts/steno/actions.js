@@ -120,15 +120,17 @@ function lowerFirstLetter(string) {
 }
 
 export class ActionHandler {
-  constructor(stenopad, word) {
+  constructor() {
+    this.actions_list = [];
+    this.detect_special_regex = /\{.*\}/s;
+  }
+
+  main(stenopad, word) {
     this.stenopad = stenopad;
     this.word = word;
 
-    this.detect_special_regex = /\{.*\}/s;
-
     this.translation = this.word.translation;
     this.output = this.word.output;
-    this.actions_list = [];
 
     this.previous_word = this.stenopad.word_history.slice(-1)[0];
 
@@ -147,11 +149,6 @@ export class ActionHandler {
     this.pre_word_actions.push(...this.carryover_actions);
     this.post_word_actions = [];
     this.no_word_actions = [];
-
-    this.main();
-  }
-
-  main() {
     if (this.translation.match(this.detect_special_regex)) {
       [this.output, this.actions_list] = this.get_special_actions();
     }

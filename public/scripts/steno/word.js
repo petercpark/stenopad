@@ -3,14 +3,16 @@ import { ActionHandler } from "./actions.js";
 const NUMBER_KEYS = ["O", "S-", "T-", "P-", "H-", "A", "-F", "-P", "-L", "-T"];
 
 export class Word {
-  constructor(stenopad, raw_stroke) {
+  constructor(stenopad, steno_keys) {
     this.stenopad = stenopad;
-    this.raw_stroke = raw_stroke;
+    this.steno_keys = steno_keys;
+
+    this.raw_stroke = this.get_raw_stroke(this.steno_keys);
     this.translation = "";
     this.output = "";
     this.compound = false;
 
-    this.actions;
+    this.actions = new ActionHandler();
 
     this.main();
   }
@@ -27,19 +29,26 @@ export class Word {
     }
 
     // special actions
-    this.actions = new ActionHandler(this.stenopad, this);
+    this.actions.main(this.stenopad, this);
     this.output = this.actions.output;
 
     this.stenopad.update_word_history(this);
   }
 
+  get_raw_stroke(steno_keys) {
+    return steno_keys
+      .join("")
+      .replace(/--/g, "x")
+      .replace(/(?<!^)-/g, "")
+      .replace(/x/g, "-")
+      .replace(/SS/g, "S")
+      .replace(/##/g, "#")
+      .replace(/11/g, "1")
+      .replace(/\*\*/g, "*");
+  }
+
   get_translation() {
     let translation = "";
-
-    // number
-    if (this.raw_stroke.includes("#")) {
-      translation = this.filter_number(this.raw_stroke);
-    }
 
     for (let dictionary of this.stenopad.dictionaries) {
       // single stroke
@@ -74,6 +83,12 @@ export class Word {
       }
     }
 
+    // number
+    if (this.raw_stroke.includes("#") && !translation) {
+      translation = this.filter_number();
+      return translation;
+    }
+
     // raw
     translation = translation ? translation : this.raw_stroke;
 
@@ -81,16 +96,22 @@ export class Word {
   }
 
   filter_number() {
-    let raw_numbers = Array.from(this.raw_stroke).map((key) => {
+    let raw_numbers = Array.from(this.steno_keys).map((key) => {
       if (key === "#") {
         return;
       }
       let index = NUMBER_KEYS.indexOf(key);
+      console.log(NUMBER_KEYS, key, index);
       return index == -1 ? key : index;
     });
-    let translation = /\d/.test(raw_numbers)
-      ? filter_dash(raw_numbers)
-      : "#" + filter_dash(raw_numbers);
-    return translation;
+
+    console.log(raw_numbers);
+
+    if (/\d/.test(raw_numbers)) {
+      this.actions.actions_list.push("glue", "word");
+      return raw_numbers.join("");
+    } else {
+      return "#" + raw_numbers.join("");
+    }
   }
 }

@@ -1,10 +1,12 @@
 import { Word } from "./word.js";
 import { Machine } from "./machine.js";
+import { Settings } from "./settings.js";
 
 class StenoPad {
   constructor() {
     //DOM
     this.textarea = document.getElementById("main-textarea");
+    this.textarea.focus();
 
     //variables
     this.default_dictionary_path = ["main.json", "commands.json"];
@@ -27,6 +29,9 @@ class StenoPad {
     //machine
     this.machine = new Machine();
     this.machine.addListener(this.press.bind(this));
+
+    //settings
+    this.settings = new Settings(this);
   }
 
   async get_dictionaries() {
@@ -55,8 +60,8 @@ class StenoPad {
 
   press(steno_keys) {
     //raw output
-    let raw_stroke = this.get_raw_stroke(steno_keys);
-    let word = new Word(this, raw_stroke); //word.output and word.actions
+    this.steno_keys = steno_keys;
+    let word = new Word(this, steno_keys); //word.output and word.actions
     console.log(word);
     this.output(word);
     this.save();
@@ -104,18 +109,7 @@ class StenoPad {
     }
   }
 
-  get_raw_stroke(steno_keys) {
-    return steno_keys
-      .join("")
-      .replace(/--/g, "x")
-      .replace(/(?<!^)-/g, "")
-      .replace(/x/g, "-")
-      .replace(/SS/g, "S")
-      .replace(/##/g, "#")
-      .replace(/11/g, "1")
-      .replace(/\*\*/g, "*");
-  }
-
+  //work in progress
   send_keycode(keycode) {
     keycode = keycode.replace(/{#/g, "").replace(/}/g, "");
     let eventInfo = this.specialKeys[keycode];

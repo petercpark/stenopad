@@ -1,5 +1,8 @@
-export class Gemini {
-  constructor() {
+import { Serial } from "./serial.js";
+
+export class Gemini extends Serial {
+  constructor(machine) {
+    super(machine);
     // prettier-ignore
     this.STENO_KEY_MAP = ["Fn", "#", "#", "#", "#", "#", "#", //
                             "S-", "S-", "T-", "K-", "P-", "W-", "H-", //
