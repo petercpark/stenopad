@@ -22,56 +22,53 @@ const all_actions = {
   "*+": "repeat_last_stroke",
   "#": "nothing",
 };
+const all_actions_keys = Object.keys(all_actions);
+const action_keys_regex = new RegExp(
+  `(${all_actions_keys.map(escapeRegExp).join("|")})`,
+  "g"
+);
 
-const all_specialKeys = {
-  backspace: { key: "Backspace", code: "Backspace", keyCode: 8 },
-  tab: { key: "Tab", code: "Tab", keyCode: 9 },
-  enter: { key: "Enter", code: "Enter", keyCode: 13 },
-  shift: { key: "Shift", code: "ShiftLeft", keyCode: 16 }, // ShiftLeft for left shift
-  control: { key: "Control", code: "ControlLeft", keyCode: 17 }, // ControlLeft for left control
-  alt: { key: "Alt", code: "AltLeft", keyCode: 18 }, // AltLeft for left alt
-  pause: { key: "Pause", code: "Pause", keyCode: 19 },
-  capslock: { key: "CapsLock", code: "CapsLock", keyCode: 20 },
-  escape: { key: "Escape", code: "Escape", keyCode: 27 },
-  space: { key: " ", code: "Space", keyCode: 32 },
-  pageup: { key: "PageUp", code: "PageUp", keyCode: 33 },
-  pagedown: { key: "PageDown", code: "PageDown", keyCode: 34 },
-  end: { key: "End", code: "End", keyCode: 35 },
-  home: { key: "Home", code: "Home", keyCode: 36 },
-  arrowleft: { key: "ArrowLeft", code: "ArrowLeft", keyCode: 37 },
-  arrowup: { key: "ArrowUp", code: "ArrowUp", keyCode: 38 },
-  arrowright: { key: "ArrowRight", code: "ArrowRight", keyCode: 39 },
-  arrowdown: { key: "ArrowDown", code: "ArrowDown", keyCode: 40 },
-  printscreen: {
-    key: "PrintScreen",
-    code: "PrintScreen",
-    keyCode: 44,
-  },
-  insert: { key: "Insert", code: "Insert", keyCode: 45 },
-  delete: { key: "Delete", code: "Delete", keyCode: 46 },
-  f1: { key: "F1", code: "F1", keyCode: 112 },
-  f2: { key: "F2", code: "F2", keyCode: 113 },
-  f3: { key: "F3", code: "F3", keyCode: 114 },
-  f4: { key: "F4", code: "F4", keyCode: 115 },
-  f5: { key: "F5", code: "F5", keyCode: 116 },
-  f6: { key: "F6", code: "F6", keyCode: 117 },
-  f7: { key: "F7", code: "F7", keyCode: 118 },
-  f8: { key: "F8", code: "F8", keyCode: 119 },
-  f9: { key: "F9", code: "F9", keyCode: 120 },
-  f10: { key: "F10", code: "F10", keyCode: 121 },
-  f11: { key: "F11", code: "F11", keyCode: 122 },
-  f12: { key: "F12", code: "F12", keyCode: 123 },
-  numlock: { key: "NumLock", code: "NumLock", keyCode: 144 },
-  scrolllock: { key: "ScrollLock", code: "ScrollLock", keyCode: 145 },
-  win: { key: "Meta", code: "MetaLeft", keyCode: 91 },
-  meta: { key: "Meta", code: "MetaLeft", keyCode: 91 },
-  super: { key: "Meta", code: "MetaLeft", keyCode: 91 },
-  contextmenu: {
-    key: "ContextMenu",
-    code: "ContextMenu",
-    keyCode: 93,
-  },
-};
+const all_special_keys = [
+  "backspace",
+  "tab",
+  "enter",
+  "shift",
+  "control",
+  "alt",
+  "pause",
+  "capslock",
+  "escape",
+  "space",
+  "pageup",
+  "pagedown",
+  "end",
+  "home",
+  "arrowleft",
+  "arrowup",
+  "arrowright",
+  "arrowdown",
+  "printscreen",
+  "insert",
+  "delete",
+  "f1",
+  "f2",
+  "f3",
+  "f4",
+  "f5",
+  "f6",
+  "f7",
+  "f8",
+  "f9",
+  "f10",
+  "f11",
+  "f12",
+  "numlock",
+  "scrolllock",
+  "win",
+  "meta",
+  "super",
+  "contextmenu",
+];
 
 function splitArrayAtValue(array, value) {
   let index = array.indexOf(value);
@@ -116,6 +113,24 @@ function lowerFirstLetter(string) {
         string.slice(i + 1)
       );
     }
+  }
+}
+
+function emulateBackspace() {
+  let textArea = document.querySelector("#main-textarea");
+  let caretPos = textArea.selectionStart;
+
+  // Ensure there is text in the textarea and caret is not at the beginning
+  if (textArea.value.length > 0 && caretPos > 0) {
+    // Remove the character before the caret
+    let newText =
+      textArea.value.substring(0, caretPos - 1) +
+      textArea.value.substring(caretPos);
+
+    // Update the text area with the new text and move the caret back
+    textArea.value = newText;
+    textArea.selectionStart = caretPos - 1;
+    textArea.selectionEnd = caretPos - 1;
   }
 }
 
@@ -169,27 +184,27 @@ export class ActionHandler {
       if (component.match(this.detect_special_regex)) {
         //extract all actions
         let inner_string = component.replace(/[{}]/g, "");
-        let action_keys = Object.keys(all_actions);
 
-        const action_keys_pattern = new RegExp(
-          `(${action_keys.map(escapeRegExp).join("|")})`,
-          "g"
-        );
-        // list actions and handle words inside component
+        // split inner by special action
         let actions = inner_string
-          .split(action_keys_pattern)
+          .split(action_keys_regex)
           .filter(Boolean)
           .map((action) => {
-            if (action_keys.includes(action)) {
+            // if special action
+            if (all_actions_keys.includes(action)) {
               let action_value = all_actions[action];
               if (action_value === "stop" || action_value === "comma") {
                 word.output += action;
               }
               return action_value;
-            } else {
-              word.output += action;
-              return "word";
             }
+            // if special key (command, control, etc.)
+            if (all_special_keys.includes(action.toLowerCase())) {
+              return action.toLowerCase();
+            }
+            // else word
+            word.output += action;
+            return "word";
           });
 
         word.actions.push(...actions);
@@ -245,7 +260,6 @@ export class ActionHandler {
             this.previous_word &&
             this.previous_word.actions.actions_list.includes("glue")
           ) {
-            console.log("gluing");
             this.output = this.output.trimStart();
           }
           break;
@@ -294,7 +308,6 @@ export class ActionHandler {
         case "carry_cap": {
           if (this.pre_word_actions.includes("cap_first_word")) {
             this.post_word_actions.push("cap_first_word");
-            console.log(this.post_word_actions);
           }
           break;
         }
@@ -304,6 +317,10 @@ export class ActionHandler {
           break;
         case "comma":
           this.output = this.output.trimStart();
+          break;
+        case "nothing":
+          this.output = "";
+          break;
         default:
           break;
       }
@@ -319,7 +336,6 @@ export class ActionHandler {
   handle_no_word_actions(no_word_actions) {
     for (let action of no_word_actions) {
       //separate pre/post
-
       let pre_actions = [
         "newline",
         "tab",
@@ -329,12 +345,31 @@ export class ActionHandler {
         "repeat_last_stroke",
         "nothing",
       ];
-
+      //no word actions that are actually preword actions
       if (action.startsWith("retro") || pre_actions.includes(action)) {
         this.handle_pre_word_actions([action]);
-      } else {
-        this.post_word_actions.push(action);
+        continue;
       }
+
+      //if special key
+      if (all_special_keys.includes(action.toLowerCase())) {
+        this.handle_special_keys(action.toLowerCase());
+        continue;
+      }
+
+      //else post word action
+      this.post_word_actions.push(action);
+    }
+  }
+
+  handle_special_keys(action) {
+    this.word.update_history = false;
+    switch (action) {
+      case "backspace":
+        emulateBackspace();
+        break;
+      default:
+        break;
     }
   }
 }

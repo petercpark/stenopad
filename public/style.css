@@ -162,7 +162,7 @@ button {
   padding: calc(1em + 68px) max(-372px + 50vw, 1em) 5em;
   box-sizing: border-box;
   font-size: 18px;
-  line-height: 120%;
+  line-height: 200%;
   outline: none;
   border: none;
   user-select: auto;

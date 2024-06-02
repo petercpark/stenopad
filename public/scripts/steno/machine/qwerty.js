@@ -2,6 +2,16 @@ export class Qwerty {
   constructor(machine) {
     this.machine = machine;
     this.STENO_MAP = {
+      1: "#",
+      2: "#",
+      3: "#",
+      4: "#",
+      5: "#",
+      6: "#",
+      7: "#",
+      8: "#",
+      9: "#",
+      0: "#",
       q: "S-",
       a: "S-",
       w: "T-",
@@ -28,17 +38,8 @@ export class Qwerty {
       ";": "-S",
       "[": "-D",
       "'": "-Z",
-      1: "#",
-      2: "#",
-      3: "#",
-      4: "#",
-      5: "#",
-      6: "#",
-      7: "#",
-      8: "#",
-      9: "#",
-      0: "#",
     };
+    this.steno_order = Object.values(this.STENO_MAP);
     this.steno_keys = [];
     this.down_keys = [];
   }
@@ -61,7 +62,10 @@ export class Qwerty {
       event.preventDefault();
       event.stopPropagation();
       this.down_keys.push(key);
-      this.steno_keys.push(this.STENO_MAP[key]);
+      //make sure no duplicate
+      if (!this.steno_keys.includes(this.STENO_MAP[key])) {
+        this.steno_keys.push(this.STENO_MAP[key]);
+      }
     }
   };
   handleKeyUp = (event) => {
@@ -71,6 +75,10 @@ export class Qwerty {
     }
     //all keys let go
     if (!this.down_keys[0] && this.steno_keys[0]) {
+      //sort using steno order
+      this.steno_keys.sort((a, b) => {
+        return this.steno_order.indexOf(a) - this.steno_order.indexOf(b);
+      });
       this.machine.notifyListeners(this.steno_keys);
       this.steno_keys = [];
     }

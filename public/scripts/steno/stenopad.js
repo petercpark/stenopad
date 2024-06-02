@@ -110,18 +110,18 @@ class StenoPad {
   }
 
   //work in progress
-  send_keycode(keycode) {
-    keycode = keycode.replace(/{#/g, "").replace(/}/g, "");
-    let eventInfo = this.specialKeys[keycode];
-    var event = new KeyboardEvent("keydown", {
+  send_keycode(eventInfo) {
+    this.textarea.focus();
+    let event = new KeyboardEvent("keypress", {
       bubbles: true,
       cancelable: true,
+      view: window,
       key: eventInfo.key,
       code: eventInfo.code,
-      keyCode: eventInfo.keycode,
-      which: eventInfo.keycode,
+      keyCode: eventInfo.keyCode,
+      which: eventInfo.keyCode,
     });
-    this.textarea.dispatchEvent(event);
+    document.dispatchEvent(event);
   }
 }
 

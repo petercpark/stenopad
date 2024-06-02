@@ -11,6 +11,7 @@ export class Word {
     this.translation = "";
     this.output = "";
     this.compound = false;
+    this.update_history = true;
 
     this.actions = new ActionHandler();
 
@@ -32,7 +33,9 @@ export class Word {
     this.actions.main(this.stenopad, this);
     this.output = this.actions.output;
 
-    this.stenopad.update_word_history(this);
+    if (this.update_history) {
+      this.stenopad.update_word_history(this);
+    }
   }
 
   get_raw_stroke(steno_keys) {
@@ -86,7 +89,6 @@ export class Word {
     // number
     if (this.raw_stroke.includes("#") && !translation) {
       translation = this.filter_number();
-      return translation;
     }
 
     // raw
@@ -101,17 +103,14 @@ export class Word {
         return;
       }
       let index = NUMBER_KEYS.indexOf(key);
-      console.log(NUMBER_KEYS, key, index);
       return index == -1 ? key : index;
     });
-
-    console.log(raw_numbers);
 
     if (/\d/.test(raw_numbers)) {
       this.actions.actions_list.push("glue", "word");
       return raw_numbers.join("");
     } else {
-      return "#" + raw_numbers.join("");
+      return "";
     }
   }
 }
