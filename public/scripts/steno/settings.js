@@ -1,6 +1,3 @@
-import { Qwerty } from "./machine/qwerty.js";
-import { Gemini } from "./machine/gemini.js";
-
 function toggleOpacity(element) {
   if (element.classList.contains("visible")) {
     disappear(element);
@@ -65,8 +62,10 @@ export class Settings {
     this.enable_qwerty_button = document.querySelector("#qwerty-steno-button");
 
     // if previously enabled
-    if (is_qwerty_mode) {
+    if (is_qwerty_mode || is_qwerty_mode === null) {
       this.enable_qwerty_steno();
+    } else {
+      this.disable_qwerty_steno();
     }
 
     //add toggle

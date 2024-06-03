@@ -6,7 +6,6 @@ export class Machine {
     this.listeners = [];
     this.protocol = new Gemini(this);
     this.qwerty = new Qwerty(this);
-    this.qwerty.enable();
   }
 
   addListener(callback) {
