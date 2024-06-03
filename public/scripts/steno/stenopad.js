@@ -99,7 +99,26 @@ class StenoPad {
   }
 
   output(word) {
-    this.textarea.value += word.output;
+    // Get the current cursor position
+    const startPos = this.textarea.selectionStart;
+    const endPos = this.textarea.selectionEnd;
+
+    // Get the textarea value before and after the cursor position
+    const textBeforeCursor = this.textarea.value.substring(0, startPos);
+    const textAfterCursor = this.textarea.value.substring(
+      endPos,
+      this.textarea.value.length
+    );
+
+    // Insert the word at the cursor position
+    this.textarea.value = textBeforeCursor + word.output + textAfterCursor;
+
+    // Move the cursor to the end of the inserted word
+    const newCursorPos = startPos + word.output.length;
+    this.textarea.setSelectionRange(newCursorPos, newCursorPos);
+
+    // Focus the textarea to ensure the cursor position is set
+    this.textarea.focus();
   }
 
   update_word_history(word) {
