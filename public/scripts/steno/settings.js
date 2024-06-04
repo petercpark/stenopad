@@ -62,10 +62,10 @@ export class Settings {
     this.enable_qwerty_button = document.querySelector("#qwerty-steno-button");
 
     // if previously enabled
-    if (is_qwerty_mode || is_qwerty_mode === null) {
+    if (is_qwerty_mode || localStorage.getItem("qwerty-steno") === null) {
       this.enable_qwerty_steno();
     } else {
-      this.disable_qwerty_steno();
+      //this.disable_qwerty_steno();
     }
 
     //add toggle
