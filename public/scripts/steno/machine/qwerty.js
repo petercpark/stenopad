@@ -55,7 +55,6 @@ export class Qwerty {
   }
 
   handleKeyDown = (event) => {
-    console.log(event);
     let no_mod =
       !event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey;
     let key = event.key.toLowerCase();
