@@ -55,14 +55,18 @@ export class Qwerty {
   }
 
   handleKeyDown = (event) => {
+    console.log(event);
     let no_mod =
       !event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey;
     let key = event.key.toLowerCase();
-    if (key in this.STENO_MAP && !this.down_keys.includes(key) && no_mod) {
+    if (key in this.STENO_MAP && no_mod) {
       event.preventDefault();
       event.stopPropagation();
-      this.down_keys.push(key);
-      //make sure no duplicate
+      //down keys update
+      if (!this.down_keys.includes(key)) {
+        this.down_keys.push(key);
+      }
+      //steno keys update
       if (!this.steno_keys.includes(this.STENO_MAP[key])) {
         this.steno_keys.push(this.STENO_MAP[key]);
       }
