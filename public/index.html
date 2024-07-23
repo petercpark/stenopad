@@ -78,7 +78,29 @@
             >
               Disable Qwerty Steno
             </button>
-            <div class="select-dictionary-container none">
+            <div class="dictionary-manager-container">
+              <p>Dictionary Manager</p>
+              <div class="dictionary-list-container">
+                <ul class="dictionary-list">
+                  <li class="dictionary-list-item">
+                    <input type="checkbox" name="user" checked /><label
+                      >user.json</label
+                    >
+                  </li>
+                  <li class="dictionary-list-item">
+                    <input type="checkbox" name="main" checked /><label
+                      >main.json</label
+                    >
+                  </li>
+                  <li class="dictionary-list-item">
+                    <input type="checkbox" name="commands" checked /><label
+                      >commands.json</label
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="add-dictionary-container">
               <input
                 type="file"
                 id="dictionary-input"
@@ -87,15 +109,16 @@
                 style="display: none"
               />
               <button
-                id="select-dictionaries-button"
+                id="add-dictionary-button"
                 class="button hover-button menu-button"
               >
-                Select Dictionaries
+                Add Dictionary
               </button>
             </div>
           </div>
         </div>
       </div>
+
       <div id="content">
         <textarea id="main-textarea" placeholder="Start writing..."></textarea>
       </div>

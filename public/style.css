@@ -79,6 +79,13 @@ button {
 .gray {
   color: rgb(125, 125, 125);
 }
+.container {
+  background-color: white;
+  border-style: solid;
+  border-color: rgb(224 225 229);
+  border-width: 1px;
+  border-radius: 0.5rem;
+}
 
 /* header */
 .header {
@@ -167,6 +174,30 @@ button {
   border: none;
   user-select: auto;
   scroll-padding-bottom: 0px;
+}
+
+.popup-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dictionary-manager-container {
+  padding: 0 0.5em;
+}
+
+.add-dictionary-container {
+}
+
+#add-dictionary-button {
+}
+
+.dictionary-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 0.5em;
 }
 
 /* Responsive adjustments */

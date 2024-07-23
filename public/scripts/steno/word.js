@@ -6,6 +6,7 @@ export class Word {
   constructor(stenopad, steno_keys) {
     this.stenopad = stenopad;
     this.steno_keys = steno_keys;
+    this.dictionaries = this.stenopad.dictionary.dictionaries;
 
     this.raw_stroke = this.get_raw_stroke(this.steno_keys);
     this.translation = "";
@@ -53,7 +54,9 @@ export class Word {
   get_translation() {
     let translation = "";
 
-    for (let dictionary of this.stenopad.dictionaries) {
+    for (const dictionary_name in this.dictionaries) {
+      let dictionary = this.dictionaries[dictionary_name];
+
       // single stroke
       translation = dictionary[this.raw_stroke];
 

@@ -1,6 +1,7 @@
 import { Word } from "./word.js";
 import { Machine } from "./machine.js";
 import { Settings } from "./settings.js";
+import { Dictionary } from "./dictionary.js";
 
 class StenoPad {
   constructor() {
@@ -9,8 +10,7 @@ class StenoPad {
     this.textarea.focus();
 
     //variables
-    this.default_dictionary_path = ["main.json", "commands.json"];
-    this.dictionaries = [];
+    this.dictionary = new Dictionary();
 
     this.word_history = [];
     this.history_length = 100;
@@ -22,7 +22,7 @@ class StenoPad {
   }
 
   async setup() {
-    await this.get_dictionaries();
+    await this.dictionary.get_dictionaries();
     await this.load_text();
     this.loop_save();
 
@@ -32,17 +32,6 @@ class StenoPad {
 
     //settings
     this.settings = new Settings(this);
-  }
-
-  async get_dictionaries() {
-    this.default_dictionary_path.forEach((url) => {
-      fetch("dictionaries/" + url)
-        .then((response) => response.json())
-        .then((data) => {
-          this.dictionaries.push(data);
-        })
-        .catch((error) => console.error("Error fetching JSON:", error));
-    });
   }
 
   async loop_save() {

@@ -55,17 +55,21 @@ export class Settings {
 
     //qwerty steno
     this.qwerty_steno_mode();
+
+    stenopad.textarea.addEventListener("click", () => {
+      disappear_all_menu();
+    });
   }
 
   qwerty_steno_mode() {
-    let is_qwerty_mode = localStorage.getItem("qwerty-steno") === "enabled";
+    let qwerty_mode = localStorage.getItem("qwerty-steno");
     this.enable_qwerty_button = document.querySelector("#qwerty-steno-button");
 
     // if previously enabled
-    if (is_qwerty_mode || localStorage.getItem("qwerty-steno") === null) {
+    if (qwerty_mode === "enabled" || qwerty_mode === null) {
       this.enable_qwerty_steno();
     } else {
-      //this.disable_qwerty_steno();
+      this.disable_qwerty_steno();
     }
 
     //add toggle
@@ -127,6 +131,28 @@ export class Settings {
       } else {
         localStorage.setItem("dark-mode", "disabled");
       }
+    });
+  }
+
+  add_dictionary() {
+    let add_dictionary_button = document.querySelector(
+      "#add-dictionary-button"
+    );
+    let fileInput = document.querySelector("#dictionary-input");
+
+    add_dictionary_button.addEventListener("click", function () {
+      console.log("click");
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change", () => {
+      const selectedFiles = fileInput.files;
+      let filesArray = [];
+      for (let i = 0; i < selectedFiles.length; i++) {
+        filesArray.push(selectedFiles[i]);
+      }
+
+      console.log(filesArray);
     });
   }
 }
