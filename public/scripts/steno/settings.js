@@ -59,6 +59,8 @@ export class Settings {
     stenopad.textarea.addEventListener("click", () => {
       disappear_all_menu();
     });
+
+    this.add_dictionary();
   }
 
   qwerty_steno_mode() {
@@ -148,8 +150,14 @@ export class Settings {
     fileInput.addEventListener("change", () => {
       const selectedFiles = fileInput.files;
       let filesArray = [];
-      for (let i = 0; i < selectedFiles.length; i++) {
-        filesArray.push(selectedFiles[i]);
+      for (let file of selectedFiles) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const jsonContent = JSON.parse(e.target.result);
+          console.log(jsonContent);
+        };
+        reader.readAsText(file);
+        filesArray.push(file);
       }
 
       console.log(filesArray);

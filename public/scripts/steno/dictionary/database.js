@@ -8,7 +8,7 @@ if (!window.indexedDB) {
 }
 
 // Open (or create) the database
-const request = indexedDB.open("stenodictDB", 1);
+export const request = indexedDB.open("stenodictDB", 1);
 
 request.onerror = function (event) {
   console.log("Error opening IndexedDB:", event.target.errorCode);
@@ -51,18 +51,22 @@ export function addData(jsonData) {
 
 // Retrieve data from the database
 export function getData(id) {
-  const transaction = db.transaction(["jsonFiles"], "readonly");
-  const objectStore = transaction.objectStore("jsonFiles");
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(["jsonFiles"], "readonly");
+    const objectStore = transaction.objectStore("jsonFiles");
 
-  const request = objectStore.get(id);
+    const request = objectStore.get(id);
 
-  request.onsuccess = function (event) {
-    console.log("Data retrieved:", request.result);
-  };
+    request.onsuccess = function (event) {
+      console.log("Data retrieved:", request.result);
+      resolve(request.result);
+    };
 
-  request.onerror = function (event) {
-    console.log("Error retrieving data", event.target.errorCode);
-  };
+    request.onerror = function (event) {
+      console.log("Error retrieving data", event.target.errorCode);
+      reject(event.target.errorCode);
+    };
+  });
 }
 
 // Delete data from the database
@@ -92,7 +96,8 @@ const jsonData = {
 // Ensure the database is open before adding data
 request.onsuccess = function (event) {
   db = event.target.result;
-  addData(jsonData);
-  getData(1); // Assuming the ID is 1 for demonstration purposes
-  deleteData(1); // Assuming the ID is 1 for demonstration purposes
+  // addData(jsonData);
+  // jsonData.name = "hello1";
+  // getData(1); // Assuming the ID is 1 for demonstration purposes
+  // deleteData(1); // Assuming the ID is 1 for demonstration purposes
 };

@@ -1,4 +1,9 @@
-import { addData } from "./dictionary/database.js";
+import {
+  addData,
+  getData,
+  deleteData,
+  request,
+} from "./dictionary/database.js";
 
 export class Dictionary {
   constructor() {
@@ -85,5 +90,13 @@ export class Dictionary {
         })
         .catch((error) => console.error("Error fetching JSON:", error));
     });
+
+    request.onsuccess = function (event) {
+      db = event.target.result;
+      // addData(jsonData);
+      // jsonData.name = "hello1";
+      // getData(1); // Assuming the ID is 1 for demonstration purposes
+      // deleteData(1); // Assuming the ID is 1 for demonstration purposes
+    };
   }
 }
